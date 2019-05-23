@@ -131,9 +131,7 @@ function selectorInit() {
     console.log("Loading Layer Settings");
     let layerSettings = loadLayerSaverSettings();
     var firstOption = document.createElement("option");
-    firstOption.style.diplay = "none";
-    firstOption.selected = firstOption.disabled = firstOption.hidden = true;
-    firstOption.value = "";
+    firstOption.hidden = true;
     document.getElementById("LSaverSelector").appendChild(firstOption);
 
     // build the selector options
