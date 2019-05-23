@@ -17,7 +17,7 @@
 /* global _ */
 
 setTimeout(initLayerSaver, 1000);
-var debug = true;
+var debug = false;
 
 function initLayerSaver() {
     if (!WazeWrap.Ready || typeof W === "undefined" || typeof W.map === "undefined" || typeof W.loginManager === "undefined" || !document.querySelector("#topbar-container > div > div > div.location-info-region > div") || !document.getElementById("layer-switcher-group_display")) {
