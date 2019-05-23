@@ -5,7 +5,7 @@
 // @description     Save the state of different combinations of layer display settings
 // @include         /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor.*$/
 // @require          https://greasyfork.org/scripts/24851-wazewrap/code/WazeWrap.js
-// @version         2019.05.22.001
+// @version         2019.05.23.001
 // @grant           none
 // @copyright       2019 HBiede
 // ==/UserScript==
@@ -41,8 +41,10 @@ function createTab() {
         "<div id='LSaverSelectorDiv'><label>Groups</label><br><select id='LSaverSelector' style='width:90%; margin-bottom: 8px;'></select></div>",
         "<div id='LSaverInteractionDiv'></div>",
         "<button class='btn btn-primary' id='LSaverLoadBtn' title='Load' style='margin: 8px 8px auto auto;'>Load</button>",
-        "<button class='btn btn-primary' id='LSaverDeleteBtn' title='Delete Selected' style='margin: 8px 8px auto auto;'>Delete Selected</button>",
-        "<button class='btn btn-primary' id='LSaverSaveBtn' title='Save New Group' style='margin: 8px 8px auto auto;'>Save New Group</button>",
+        "<button class='btn btn-primary' id='LSaverDeleteBtn' title='Delete Selected' style='margin: 8px 8px auto auto;'>Delete Selected</button><br>",
+        "<button class='btn btn-primary' id='LSaverSaveBtn' title='Save New Group' style='margin: 8px 8px auto auto;'>Save New Group</button><br>",
+        "<button class='btn btn-primary' id='LSaverImportBtn' title='Import' style='margin: 8px 8px auto auto;'>Import</button>",
+        "<button class='btn btn-primary' id='LSaverExportBtn' title='Export' style='margin: 8px 8px auto auto;'>Export</button>",
         "</div>"
     ].join(""));
 
@@ -53,14 +55,14 @@ function createTab() {
 // load all the settings groups
 function loadLayerSaverSettings() {
     if (debug) console.log("Loaded Settings: [" + JSON.parse(localStorage.layerSaverSettings) + "]");
-    let returnValue = JSON.parse(localStorage.layerSaverSettings);
+    const returnValue = JSON.parse(localStorage.layerSaverSettings);
     return (Array.isArray(returnValue) ? returnValue : [returnValue]);
 }
 
 // save all the settings groups
 function saveLayerSaverSettings() {
     var arrayBuilder = [];
-    let settings = document.getElementById("LSaverSelector").children;
+    const settings = document.getElementById("LSaverSelector").children;
     for (var i = 1; i < settings.length; i++) {
         arrayBuilder = arrayBuilder.concat([settings[i].textContent + "::" + settings[i].settingsString]);
     }
@@ -71,8 +73,8 @@ function saveLayerSaverSettings() {
 // load the selected settings group
 function loadLayerSettings() {
     if (document.getElementById("LSaverSelector").selectedIndex != 0) {
-        let settingsString = document.getElementById("LSaverSelector").selectedOptions[0].settingsString;
-        let toggles = document.getElementById('layer-switcher-group_display').parentNode.parentNode.parentNode.querySelectorAll('input');
+        const settingsString = document.getElementById("LSaverSelector").selectedOptions[0].settingsString;
+        const toggles = document.getElementById('layer-switcher-group_display').parentNode.parentNode.parentNode.querySelectorAll('input');
         for (var i = 0; i < toggles.length; i++) {
             // if the input is in the group and not checked, or not in the group and checked, click the input
             console.log((toggles[i].id && settingsString.includes(toggles[i].id)) || (toggles[i].labels[0].textContent && settingsString.includes(toggles[i].labels[0].textContent)));
@@ -90,7 +92,7 @@ function loadLayerSettings() {
 // delete the selected settings group
 function deleteLayerSettings() {
     if (document.getElementById("LSaverSelector").selectedIndex != 0) {
-        let name = document.getElementById("LSaverSelector").children[document.getElementById("LSaverSelector").selectedIndex].textContent;
+        const name = document.getElementById("LSaverSelector").children[document.getElementById("LSaverSelector").selectedIndex].textContent;
         document.getElementById("LSaverSelector").children[document.getElementById("LSaverSelector").selectedIndex].remove();
         saveLayerSaverSettings();
         console.log("Deleted Group: " + name);
@@ -113,7 +115,7 @@ function saveLayerSettings() {
 
 // turn the currently selected inputs into a usable string
 function getCurrentLayerSettingsString() {
-    let toggles = document.getElementById('layer-switcher-group_display').parentNode.parentNode.parentNode.querySelectorAll('input');
+    const toggles = document.getElementById('layer-switcher-group_display').parentNode.parentNode.parentNode.querySelectorAll('input');
     var stringBuilder = "";
     for (var i = 0; i < toggles.length; i++) {
         if (toggles[i].checked) {
@@ -126,10 +128,37 @@ function getCurrentLayerSettingsString() {
     return stringBuilder;
 }
 
+// import a settings array in the from of a base64 encoded stringified version of the settings array
+function importSettingsString() {
+	const importedArray = JSON.parse(window.atob(prompt("Import settings text", "")));
+	if (Array.isArray(importedArray)) {
+		localStorage.layerSaverSettings = JSON.stringify(loadLayerSaverSettings().concat(importedArray));
+		var selector = document.getElementById("LSaverSelector");
+		while (selector.firstChild) {
+			selector.removeChild(selector.firstChild);
+		}
+		selectorInit();
+		alert("Loaded");
+		return;
+	}
+	alert("Invalid Input String");
+}
+
+// export a settings array in the from of a base64 encoded stringified version of the settings array
+function exportSettingsString() {
+	const ta = document.createElement('textarea');
+	ta.value = window.btoa(localStorage.layerSaverSettings);
+	document.body.appendChild(ta);
+	ta.select();
+	document.execCommand('copy');
+	document.body.removeChild(ta);
+	alert("Copied all groups' settings text to clipboard");
+}
+
 // build the selector on the script tab
 function selectorInit() {
     console.log("Loading Layer Settings");
-    let layerSettings = loadLayerSaverSettings();
+    const layerSettings = loadLayerSaverSettings();
     var firstOption = document.createElement("option");
     firstOption.hidden = true;
     document.getElementById("LSaverSelector").appendChild(firstOption);
@@ -137,7 +166,7 @@ function selectorInit() {
     // build the selector options
     if (layerSettings.length > 0) {
         for (var i = 0; i < layerSettings.length; i++) {
-            let setting = layerSettings[i].split("::");
+            const setting = layerSettings[i].split("::");
             var layerSettingSelector = document.createElement("option");
             layerSettingSelector.textContent = layerSettingSelector.value = setting[0];
             layerSettingSelector.settingsString = (setting[1] ? setting[1] : "");
@@ -149,5 +178,7 @@ function selectorInit() {
     document.getElementById("LSaverLoadBtn").addEventListener("click", function() { loadLayerSettings(); });
     document.getElementById("LSaverDeleteBtn").addEventListener("click", function() { deleteLayerSettings(); });
     document.getElementById("LSaverSaveBtn").addEventListener("click", function() { saveLayerSettings(); });
+    document.getElementById("LSaverImportBtn").addEventListener("click", function() { importSettingsString(); });
+    document.getElementById("LSaverExportBtn").addEventListener("click", function() { exportSettingsString(); });
     console.log("Layer Settings Loaded");
 }
