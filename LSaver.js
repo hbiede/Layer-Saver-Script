@@ -99,29 +99,29 @@ function getCurrentLayerSettingsString() {
 
 // import a settings array in the from of a base64 encoded stringified version of the settings array
 function importSettingsString() {
-	const importedArray = JSON.parse(window.atob(prompt("Import settings text", "")));
-	if (Array.isArray(importedArray)) {
-		localStorage.layerSaverSettings = JSON.stringify(loadLayerSaverSettings().concat(importedArray));
-		var selector = document.getElementById("LSaverSelector");
-		while (selector.firstChild) {
-			selector.removeChild(selector.firstChild);
-		}
-		selectorInit();
-		alert("Loaded");
-		return;
-	}
-	alert("Invalid Input String");
+    const importedArray = JSON.parse(window.atob(prompt("Import settings text", "")));
+    if (Array.isArray(importedArray)) {
+        localStorage.layerSaverSettings = JSON.stringify(loadLayerSaverSettings().concat(importedArray));
+        var selector = document.getElementById("LSaverSelector");
+        while (selector.firstChild) {
+            selector.removeChild(selector.firstChild);
+        }
+        selectorInit();
+        alert("Loaded");
+        return;
+    }
+    alert("Invalid Input String");
 }
 
 // export a settings array in the from of a base64 encoded stringified version of the settings array
 function exportSettingsString() {
-	const ta = document.createElement('textarea');
-	ta.value = window.btoa(localStorage.layerSaverSettings);
-	document.body.appendChild(ta);
-	ta.select();
-	document.execCommand('copy');
-	document.body.removeChild(ta);
-	alert("Copied all groups' settings text to clipboard");
+    const ta = document.createElement('textarea');
+    ta.value = window.btoa(localStorage.layerSaverSettings);
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    alert("Copied all groups' settings text to clipboard");
 }
 
 // build the selector on the script tab
