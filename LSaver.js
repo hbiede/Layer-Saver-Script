@@ -4,7 +4,7 @@
 // @namespace       hbiede.com
 // @description     Save the state of different combinations of layer display settings
 // @include         /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor.*$/
-// @require          https://greasyfork.org/scripts/24851-wazewrap/code/WazeWrap.js
+// @require         https://greasyfork.org/scripts/24851-wazewrap/code/WazeWrap.js
 // @version         2019.05.23.001
 // @grant           none
 // @copyright       2019 HBiede
@@ -18,39 +18,8 @@
 
 setTimeout(initLayerSaver, 1000);
 var debug = false;
+const updateDescription = "<h4 style='margin-bottom: 5px;'>Changes:</h4><ul><li>Added ability to import/export settings</li></ul>";
 
-function initLayerSaver() {
-    if (!WazeWrap.Ready || typeof W === "undefined" || typeof W.map === "undefined" || typeof W.loginManager === "undefined" || !document.querySelector("#topbar-container > div > div > div.location-info-region > div") || !document.getElementById("layer-switcher-group_display")) {
-        if (debug) console.log("retry");
-        setTimeout(initLayerSaver, 800);
-        return;
-    } else {
-        console.log("Starting Layer Saver");
-        if (localStorage.layerSaverSettings === undefined) {
-            localStorage.layerSaverSettings = "[]";
-        }
-        createTab();
-    }
-}
-
-function createTab() {
-    var tabDisplay = $("<div>", {id:"WMELayerSaver"});
-    tabDisplay.html([
-        "<h3><b>WME Layer Saver</b></h3>",
-        `<p><i>${GM_info.script.version} by ${GM_info.script.author}</i></p>`,
-        "<div id='LSaverSelectorDiv'><label>Groups</label><br><select id='LSaverSelector' style='width:90%; margin-bottom: 8px;'></select></div>",
-        "<div id='LSaverInteractionDiv'></div>",
-        "<button class='btn btn-primary' id='LSaverLoadBtn' title='Load' style='margin: 8px 8px auto auto;'>Load</button>",
-        "<button class='btn btn-primary' id='LSaverDeleteBtn' title='Delete Selected' style='margin: 8px 8px auto auto;'>Delete Selected</button><br>",
-        "<button class='btn btn-primary' id='LSaverSaveBtn' title='Save New Group' style='margin: 8px 8px auto auto;'>Save New Group</button><br>",
-        "<button class='btn btn-primary' id='LSaverImportBtn' title='Import' style='margin: 8px 8px auto auto;'>Import</button>",
-        "<button class='btn btn-primary' id='LSaverExportBtn' title='Export' style='margin: 8px 8px auto auto;'>Export</button>",
-        "</div>"
-    ].join(""));
-
-    new WazeWrap.Interface.Tab("LSaver", tabDisplay.html(), selectorInit);
-    if (debug) console.log(tabDisplay);
-}
 
 // load all the settings groups
 function loadLayerSaverSettings() {
@@ -181,4 +150,40 @@ function selectorInit() {
     document.getElementById("LSaverImportBtn").addEventListener("click", function() { importSettingsString(); });
     document.getElementById("LSaverExportBtn").addEventListener("click", function() { exportSettingsString(); });
     console.log("Layer Settings Loaded");
+}
+
+// Create the tab in the sidebar via WazeWrap
+function createTab() {
+    var tabDisplay = $("<div>", {id:"WMELayerSaver"});
+    tabDisplay.html([
+        "<h3><b>WME Layer Saver</b></h3>",
+        `<p><i>${GM_info.script.version} by ${GM_info.script.author}</i></p>`,
+        "<div id='LSaverSelectorDiv'><label>Groups</label><br><select id='LSaverSelector' style='width:90%; margin-bottom: 8px;'></select></div>",
+        "<div id='LSaverInteractionDiv'></div>",
+        "<button class='btn btn-primary' id='LSaverLoadBtn' title='Load' style='margin: 8px 8px auto auto;'>Load</button>",
+        "<button class='btn btn-primary' id='LSaverDeleteBtn' title='Delete Selected' style='margin: 8px 8px auto auto;'>Delete Selected</button><br>",
+        "<button class='btn btn-primary' id='LSaverSaveBtn' title='Save New Group' style='margin: 8px 8px auto auto;'>Save New Group</button><br>",
+        "<button class='btn btn-primary' id='LSaverImportBtn' title='Import' style='margin: 8px 8px auto auto;'>Import</button>",
+        "<button class='btn btn-primary' id='LSaverExportBtn' title='Export' style='margin: 8px 8px auto auto;'>Export</button>",
+        "</div>"
+    ].join(""));
+
+    new WazeWrap.Interface.Tab("LSaver", tabDisplay.html(), selectorInit);
+    if (debug) console.log(tabDisplay);
+}
+
+// main function
+function initLayerSaver() {
+    if (!WazeWrap.Ready || typeof W === "undefined" || typeof W.map === "undefined" || typeof W.loginManager === "undefined" || !document.querySelector("#topbar-container > div > div > div.location-info-region > div") || !document.getElementById("layer-switcher-group_display")) {
+        if (debug) console.log("retry");
+        setTimeout(initLayerSaver, 800);
+        return;
+    } else {
+        console.log("Starting Layer Saver");
+        if (localStorage.layerSaverSettings === undefined) {
+            localStorage.layerSaverSettings = "[]";
+        }
+        createTab();
+        WazeWrap.Interface.ShowScriptUpdate(GM_info.script.name, GM_info.script.version, updateDescription, "https://greasyfork.org/en/scripts/383384-wme-layer-saver", "https://www.waze.com/forum/viewtopic.php?f=819&t=283513");
+    }
 }
