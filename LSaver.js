@@ -5,7 +5,7 @@
 // @description     Save the state of different combinations of layer display settings
 // @include         /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor.*$/
 // @require         https://greasyfork.org/scripts/24851-wazewrap/code/WazeWrap.js
-// @version         2019.05.23.001
+// @version         2019.05.27.001
 // @grant           none
 // @copyright       2019 HBiede
 // ==/UserScript==
@@ -18,7 +18,7 @@
 
 setTimeout(initLayerSaver, 1000);
 var debug = false;
-const updateDescription = "<h4 style='margin-bottom: 5px;'>Changes:</h4><ul><li>Added ability to import/export settings</li></ul>";
+const updateDescription = "<h4 style='margin-bottom: 5px;'>Changes:</h4><ul><li>Fixed bug with switching groups</li></ul>";
 
 
 // load all the settings groups
@@ -49,7 +49,7 @@ function loadLayerSettings() {
             console.log((toggles[i].id && settingsString.includes(toggles[i].id)) || (toggles[i].labels[0].textContent && settingsString.includes(toggles[i].labels[0].textContent)));
             console.log(toggles[i].checked);
             console.log((toggles[i].id && settingsString.includes(toggles[i].id)) || (toggles[i].labels[0].textContent && settingsString.includes(toggles[i].labels[0].textContent)) != toggles[i].checked);
-            if ((toggles[i].id && settingsString.includes(toggles[i].id)) || (toggles[i].labels[0].textContent && settingsString.includes(toggles[i].labels[0].textContent)) != toggles[i].checked) {
+            if (((toggles[i].id && settingsString.includes(toggles[i].id)) || (toggles[i].labels[0].textContent && settingsString.includes(toggles[i].labels[0].textContent))) != toggles[i].checked) {
                 if (debug) console.log(toggles[i].labels[0].textContent);
                 toggles[i].click();
             }
