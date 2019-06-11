@@ -16,10 +16,11 @@
 /* global $ */
 /* global _ */
 
-setTimeout(initLayerSaver, 1000);
 var debug = false;
 const updateDescription = "<h4 style='margin-bottom: 5px;'>Changes:</h4><ul><li>Fixed bug with switching groups</li></ul>";
 
+// start
+setTimeout(initLayerSaver, 1000);
 
 // load all the settings groups
 function loadLayerSaverSettings() {
@@ -173,10 +174,11 @@ function createTab() {
 }
 
 // main function
-function initLayerSaver() {
-    if (!WazeWrap.Ready || typeof W === "undefined" || typeof W.map === "undefined" || typeof W.loginManager === "undefined" || !document.querySelector("#topbar-container > div > div > div.location-info-region > div") || !document.getElementById("layer-switcher-group_display")) {
+function initLayerSaver(attempts = 1) {
+    if (tries > 1000) return;
+    else if (!WazeWrap.Ready || typeof W === "undefined" || typeof W.map === "undefined" || typeof W.loginManager === "undefined" || !document.querySelector("#topbar-container > div > div > div.location-info-region > div") || !document.getElementById("layer-switcher-group_display")) {
         if (debug) console.log("retry");
-        setTimeout(initLayerSaver, 800);
+        setTimeout(function() { initLayerSaver(tries++); }, 800);
         return;
     } else {
         console.log("Starting Layer Saver");
