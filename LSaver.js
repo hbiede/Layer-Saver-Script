@@ -47,11 +47,8 @@ function loadLayerSettings() {
         const toggles = document.getElementById('layer-switcher-group_display').parentNode.parentNode.parentNode.querySelectorAll('input');
         for (var i = 0; i < toggles.length; i++) {
             // if the input is in the group and not checked, or not in the group and checked, click the input
-            console.log((toggles[i].id && settingsString.includes(toggles[i].id)) || (toggles[i].labels[0].textContent && settingsString.includes(toggles[i].labels[0].textContent)));
-            console.log(toggles[i].checked);
-            console.log((toggles[i].id && settingsString.includes(toggles[i].id)) || (toggles[i].labels[0].textContent && settingsString.includes(toggles[i].labels[0].textContent)) != toggles[i].checked);
             if (((toggles[i].id && settingsString.includes(toggles[i].id)) || (toggles[i].labels[0].textContent && settingsString.includes(toggles[i].labels[0].textContent))) != toggles[i].checked) {
-                if (debug) console.log(toggles[i].labels[0].textContent);
+                if (debug) console.log("toggling: " + toggles[i].labels[0].textContent);
                 toggles[i].click();
             }
         }
