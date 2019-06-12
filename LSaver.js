@@ -175,7 +175,7 @@ function initLayerSaver(attempts = 1) {
     if (attempts > 1000) return;
     else if (!WazeWrap.Ready || typeof W === "undefined" || typeof W.map === "undefined" || typeof W.loginManager === "undefined" || !document.querySelector("#topbar-container > div > div > div.location-info-region > div") || !document.getElementById("layer-switcher-group_display")) {
         if (debug) console.log("retry");
-        setTimeout(function() { initLayerSaver(tries++); }, 800);
+        setTimeout(function() { initLayerSaver(attempts++); }, 800);
         return;
     } else {
         console.log("Starting Layer Saver");
