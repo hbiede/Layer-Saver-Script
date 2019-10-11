@@ -5,7 +5,7 @@
 // @description        Save the state of different combinations of layer display settings.settings
 // @include            /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor.*$/
 // @require            https://greasyfork.org/scripts/24851-wazewrap/code/WazeWrap.js
-// @version            2019.08.11.001
+// @version            2019.09.25.001
 // @grant              none
 // @copyright          2019 HBiede
 // ==/UserScript==
@@ -21,8 +21,8 @@
 /* global prompt */
 /* global window */
 
-const DEBUG = true;
-const UPDATE_DESCRIPTION = "<h4 style='margin-bottom: 5px;'>Changes:</h4><ul><li>Allow a choosable default group to be set</li></ul>";
+const DEBUG = false;
+const UPDATE_DESCRIPTION = "<h4 style='margin-bottom: 5px;'>Bug Fixes:</h4><ul><li>Updated to work with the new WME interface</li></ul>";
 const DEFAULT_SETTINGS = { settings: [] };
 const SCRIPT_STRING = 'LSaver';
 const settings = DEFAULT_SETTINGS;
@@ -86,19 +86,17 @@ function saveLayerSaverSettings() {
 
 // load the selected settings.settings group
 function loadLayerSettings() {
-    if (document.getElementById('LSaverSelector').selectedIndex !== 0) {
-        const settingsString = document.getElementById('LSaverSelector').selectedOptions[0].settings.settingsString;
-        if (DEBUG) console.log(`Loading according to: ${settingsString}`);
-        const toggles = document.getElementById('layer-switcher-group_display').parentNode.parentNode.parentNode.querySelectorAll('input');
-        for (let i = 0; i < toggles.length; i++) {
-            // if the input is in the group and not checked, or not in the group and checked, click the input
-            if (((toggles[i].id && settingsString.includes(toggles[i].id)) || (toggles[i].labels[0].textContent && settingsString.includes(toggles[i].labels[0].textContent))) !== toggles[i].checked) {
-                if (DEBUG) console.log(`Toggling ${toggles[i].labels[0].textContent} ${(settingsString[0].includes(toggles[i].id))}`);
-                toggles[i].click();
-            }
-        }
-        console.log(`Loaded Group: ${document.getElementById('LSaverSelector').selectedOptions[0].textContent}`);
-    }
+	const settingsString = document.getElementById('LSaverSelector').selectedOptions[0].settingsString;
+	if (DEBUG) console.log(`Loading according to: ${settingsString}`);
+	const toggles = document.getElementById('layer-switcher-region').querySelectorAll('input');
+	for (let i = 0; i < toggles.length; i++) {
+		// if the input is in the group and not checked, or not in the group and checked, click the input
+		if (((toggles[i].id && settingsString.includes(toggles[i].id)) || (toggles[i].labels[0].textContent && settingsString.includes(toggles[i].labels[0].textContent))) !== toggles[i].checked) {
+			if (DEBUG) console.log(`Toggling ${toggles[i].labels[0].textContent} ${(settingsString[0].includes(toggles[i].id))}`);
+			toggles[i].click();
+		}
+	}
+	console.log(`Loaded Group: ${document.getElementById('LSaverSelector').selectedOptions[0].textContent}`);
 }
 
 // delete the selected settings.settings group
@@ -111,7 +109,7 @@ function deleteLayerSettings() {
 
 // turn the currently selected inputs into a usable string
 function getCurrentLayerSettingsString() {
-    const toggles = document.getElementById('layer-switcher-group_display').parentNode.parentNode.parentNode.querySelectorAll('input');
+    const toggles = document.getElementById('layer-switcher-region').querySelectorAll('input');
     let stringBuilder = '';
     for (let i = 0; i < toggles.length; i++) {
         if (toggles[i].checked) {
@@ -213,7 +211,7 @@ function copyToClipboard(text) {
 function exportSettingsString() {
     const selectedSetting = document.getElementById('LSaverSelector').selectedOptions[0];
     if (selectedSetting) {
-        copyToClipboard(window.btoa(JSON.stringify([`${selectedSetting.textContent}::${selectedSetting.settings.settingsString}`])));
+        copyToClipboard(window.btoa(JSON.stringify([`${selectedSetting.textContent}::${selectedSetting.settingsString}`])));
     } else {
         setAlertParagraph('Select a group');
     }
