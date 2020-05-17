@@ -5,7 +5,7 @@
 // @description        Save the state of different combinations of layer display settings.settings
 // @include            /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor.*$/
 // @require            https://greasyfork.org/scripts/24851-wazewrap/code/WazeWrap.js
-// @version            2019.09.25.001
+// @version            2020.05.16.001
 // @grant              none
 // @copyright          2019 HBiede
 // ==/UserScript==
@@ -21,10 +21,12 @@
 /* global prompt */
 /* global window */
 
-const DEBUG = false;
+const DEBUG = true;
 const UPDATE_DESCRIPTION = "<h4 style='margin-bottom: 5px;'>Bug Fixes:</h4><ul><li>Updated to work with the new WME interface</li></ul>";
 const DEFAULT_SETTINGS = { settings: [] };
 const SCRIPT_STRING = 'LSaver';
+const LAYER_SELECTION_TYPES = 'wz-toggle-switch,wz-checkbox';
+const LAYER_CONTAINER = 'layer-switcher-region';
 const settings = DEFAULT_SETTINGS;
 
 
@@ -88,11 +90,11 @@ function saveLayerSaverSettings() {
 function loadLayerSettings() {
 	const settingsString = document.getElementById('LSaverSelector').selectedOptions[0].settingsString;
 	if (DEBUG) console.log(`Loading according to: ${settingsString}`);
-	const toggles = document.getElementById('layer-switcher-region').querySelectorAll('input');
+	const toggles = document.getElementById(LAYER_CONTAINER).querySelectorAll(LAYER_SELECTION_TYPES);
 	for (let i = 0; i < toggles.length; i++) {
 		// if the input is in the group and not checked, or not in the group and checked, click the input
-		if (((toggles[i].id && settingsString.includes(toggles[i].id)) || (toggles[i].labels[0].textContent && settingsString.includes(toggles[i].labels[0].textContent))) !== toggles[i].checked) {
-			if (DEBUG) console.log(`Toggling ${toggles[i].labels[0].textContent} ${(settingsString[0].includes(toggles[i].id))}`);
+		if ((toggles[i].id && settingsString.includes(toggles[i].id)) !== toggles[i].checked) {
+			if (DEBUG) console.log(`Toggling ${toggles[i].id}`);
 			toggles[i].click();
 		}
 	}
@@ -109,13 +111,11 @@ function deleteLayerSettings() {
 
 // turn the currently selected inputs into a usable string
 function getCurrentLayerSettingsString() {
-    const toggles = document.getElementById('layer-switcher-region').querySelectorAll('input');
+    const toggles = document.getElementById(LAYER_CONTAINER).querySelectorAll(LAYER_SELECTION_TYPES);
     let stringBuilder = '';
     for (let i = 0; i < toggles.length; i++) {
         if (toggles[i].checked) {
-            stringBuilder += (toggles[i].id
-                ? toggles[i].id
-                : (toggles[i].labels[0].textContent ? toggles[i].labels[0].textContent : ''));
+            stringBuilder += toggles[i].id;
         }
     }
     if (DEBUG) console.log(stringBuilder);
