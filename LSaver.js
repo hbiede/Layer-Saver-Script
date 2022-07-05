@@ -5,7 +5,7 @@
 // @description        Save the state of different combinations of layer display settings.settings
 // @include            /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor.*$/
 // @require            https://greasyfork.org/scripts/24851-wazewrap/code/WazeWrap.js
-// @version            2020.05.16.001
+// @version            2022.07.05.001
 // @grant              none
 // @copyright          2019 HBiede
 // ==/UserScript==
@@ -159,7 +159,7 @@ function selectorInit() {
     document.getElementById('LSaverLoadBtn').addEventListener('click', () => { loadLayerSettings(); });
     document.getElementById('LSaverDeleteBtn').addEventListener('click', () => { deleteLayerSettings(); });
     document.getElementById('LSaverSaveBtn').addEventListener('click', () => { saveLayerSettings(); });
-    document.getElementById('LSaverSetDefaultBtn').addEventListener('click', () => { 
+    document.getElementById('LSaverSetDefaultBtn').addEventListener('click', () => {
     	document.getElementById('LSaverSelector').add(document.getElementById('LSaverSelector').children[document.getElementById('LSaverSelector').selectedIndex], 0);
     	saveLayerSaverSettings();
     });
@@ -248,8 +248,8 @@ function createTab() {
 // main function
 async function initLayerSaver(attempts = 1) {
     if (attempts <= 1000) {
-        if (!WazeWrap.Ready || typeof W === 'undefined' || typeof W.map === 'undefined' || typeof W.loginManager === 'undefined' || !document.querySelector('#topbar-container > div > div > div.location-info-region > div') || !document.getElementById('layer-switcher-group_display')) {
-            if (DEBUG) console.log('retry');
+        if (!WazeWrap.Ready || typeof W === 'undefined' || typeof W.map === 'undefined' || typeof W.loginManager === 'undefined' || !document.getElementById(LAYER_CONTAINER)) {
+            if (DEBUG) console.log('Layer Saver: retry');
             setTimeout(() => {
                 initLayerSaver(attempts++);
             }, 800);
