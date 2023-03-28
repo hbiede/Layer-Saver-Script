@@ -22,7 +22,7 @@
 /* global window */
 
 const DEBUG = true;
-const UPDATE_DESCRIPTION = "<h4 style='margin-bottom: 5px;'>Bug Fixes:</h4><ul><li>Prevent error on canceling setting import</li></ul>";
+const UPDATE_DESCRIPTION = "<h4 style='margin-bottom: 5px;'>Bug Fixes:</h4><ul><li>Fix tab rendering</li></ul>";
 const DEFAULT_SETTINGS = { settings: [] };
 const SCRIPT_STRING = 'LSaver';
 const LAYER_SELECTION_TYPES = 'wz-toggle-switch,wz-checkbox';
