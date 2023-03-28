@@ -5,7 +5,7 @@
 // @description        Save the state of different combinations of layer display settings.settings
 // @include            /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor.*$/
 // @require            https://greasyfork.org/scripts/24851-wazewrap/code/WazeWrap.js
-// @version            2023.03.28.001
+// @version            2023.03.28.002
 // @grant              none
 // @copyright          2023 HBiede
 // ==/UserScript==
@@ -22,7 +22,7 @@
 /* global window */
 
 const DEBUG = true;
-const UPDATE_DESCRIPTION = "<h4 style='margin-bottom: 5px;'>Bug Fixes:</h4><ul><li>Updated to work with the new WME interface</li></ul>";
+const UPDATE_DESCRIPTION = "<h4 style='margin-bottom: 5px;'>Bug Fixes:</h4><ul><li>Prevent error on canceling setting import</li></ul>";
 const DEFAULT_SETTINGS = { settings: [] };
 const SCRIPT_STRING = 'LSaver';
 const LAYER_SELECTION_TYPES = 'wz-toggle-switch,wz-checkbox';
@@ -172,21 +172,24 @@ function selectorInit() {
 // import a settings array in the from of a base64 encoded stringified version of the settings array
 function importSettingsString() {
     try {
-        const importedArray = JSON.parse(window.atob(prompt('Import settings text:', '')));
-        if (!Array.isArray(importedArray)) {
-            setAlertParagraph('Invalid Input String');
-            return;
-        }
-        settings.settings = settings.settings.concat(importedArray);
-        saveSettings('LSaver');
+	    const settingsString = window.atob(prompt('Import settings text:', ''));
+        if (settingsString) {
+	        const importedArray = JSON.parse();
+            if (!Array.isArray(importedArray)) {
+                setAlertParagraph('Invalid Input String');
+                return;
+            }
+            settings.settings = settings.settings.concat(importedArray);
+            saveSettings('LSaver');
 
-        const selector = document.getElementById('LSaverSelector');
-        while (selector.firstChild) {
-            selector.removeChild(selector.firstChild);
-        }
-        populateSelector();
+            const selector = document.getElementById('LSaverSelector');
+            while (selector.firstChild) {
+                selector.removeChild(selector.firstChild);
+            }
+            populateSelector();
 
-        setAlertParagraph('Loaded');
+            setAlertParagraph('Loaded');
+	    }
     } catch (e) {
         setAlertParagraph(e.message);
     }
