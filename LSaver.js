@@ -5,9 +5,9 @@
 // @description        Save the state of different combinations of layer display settings.settings
 // @include            /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor.*$/
 // @require            https://greasyfork.org/scripts/24851-wazewrap/code/WazeWrap.js
-// @version            2020.05.16.001
+// @version            2023.03.28.001
 // @grant              none
-// @copyright          2019 HBiede
+// @copyright          2023 HBiede
 // ==/UserScript==
 
 /* global GM_info */
@@ -241,7 +241,7 @@ function createTab() {
         '</div>'
     ].join(''));
 
-    WazeWrap.Interface.Tab('LSaver', tabDisplay.html(), selectorInit, 'Layer Saver');
+    WazeWrap.Interface.Tab(SCRIPT_STRING, tabDisplay.html(), selectorInit, 'Layer Saver');
     if (DEBUG) console.log(tabDisplay);
 }
 
