@@ -24,7 +24,7 @@
 /* global window */
 
 const DEBUG = true;
-const UPDATE_DESCRIPTION = "<h4 style='margin-bottom: 5px;'>Bug Fixes:</h4><ul><li>Fix tab rendering</li></ul>";
+const UPDATE_DESCRIPTION = "<h4 style='margin-bottom: 5px;'>Bug Fixes:</h4><ul><li>Switch to lists of settings rather than strings. May require re-creating your settings</li><li>Add disable states to buttons to improve user experience</li><li>Fix user script toggling</li></ul>";
 const DEFAULT_SETTINGS = { settings: [] };
 const SCRIPT_STRING = 'LSaver';
 const LAYER_SELECTION_TYPES = 'wz-toggle-switch,wz-checkbox';
@@ -79,7 +79,7 @@ async function loadLayerSaverSettings() {
     } else {
         settings.settings = returnValue.settings.map((s) => {
             const [title, string] = s.split('::');
-            const list = JSON.parse(string).split('layer-switcher-group_').map((t) => `layer-switcher-group_${t}`);
+            const list = string.split('layer-switcher-group_').map((t) => `layer-switcher-group_${t}`);
             return `${title}::${JSON.stringify(list)}`;
         });
     }
