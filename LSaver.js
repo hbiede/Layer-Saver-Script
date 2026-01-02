@@ -3,24 +3,20 @@
 // @author             HBiede
 // @namespace          hbiede.com
 // @description        Save the state of different combinations of layer display settings.settings
-// @include            /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor.*$/
+// @match              https://www.waze.com/editor*
+// @match              https://beta.waze.com/editor*
+// @match              https://www.waze.com/*/editor*
+// @match              https://beta.waze.com/*/editor*
 // @require            https://greasyfork.org/scripts/24851-wazewrap/code/WazeWrap.js
-// @version            2026.01.01.003
+// @version            2026.01.01.004
 // @grant              none
 // @copyright          2026 HBiede
-// @downloadURL https://update.greasyfork.org/scripts/383384/WME%20Layer%20Saver.user.js
-// @updateURL https://update.greasyfork.org/scripts/383384/WME%20Layer%20Saver.meta.js
+// @downloadURL        https://update.greasyfork.org/scripts/383384/WME%20Layer%20Saver.user.js
+// @updateURL          https://update.greasyfork.org/scripts/383384/WME%20Layer%20Saver.meta.js
 // ==/UserScript==
 
-/* global GM_info */
 /* global W */
 /* global WazeWrap */
-/* global require */
-/* global localStorage */
-/* global document */
-/* global alert */
-/* global prompt */
-/* global window */
 
 const DEBUG = true;
 const UPDATE_DESCRIPTION =
